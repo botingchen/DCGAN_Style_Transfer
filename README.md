@@ -7,8 +7,8 @@ Team 26: 0816064吳中赫 0816169陳伯庭 0816043吳玟叡
 ## 1. Main Ideas
 
 我們這組的想法，是想利用網路上所能收集到的各個畫風肖像畫，透過深度學習中的生成式對抗網路(Generative Adversarial Network, GAN)產生出一張屬於我們自己的肖像畫。產生出來之後，再透過深度學習的風格轉換(Nueral Style transfer)，結合各大著名畫家、不同畫風的畫作，產生出長的一樣，卻不同質感的肖像畫。就相當於各大著名畫家用他們的畫風來模仿了我們畫作，讓他們在逝世的數十數百年後，被我們請出來，用他們的風格來詮釋我們的畫作。
+![](https://i.imgur.com/EJccbLv.png)
 
-![image-20220610210128683](C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20220610210128683.png)
 
 ## 2. Data Collection
 
@@ -52,11 +52,14 @@ DCGAN有點類似CNN + GAN，只是DCGAN的generator 跟discriminator都捨棄�
 
 首先是Weight Initialization的部分，因為DCGAN論文內有提到Model的weight都必須由Normal Distribution(mean=0, stdev=0.02)隨機產生，所以我們寫了一個function可以直接把隨機的weight丟進model裡。
 
-<img src="C:\Users\user\AppData\Roaming\Typora\typora-user-images\image-20220610222455559.png" alt="image-20220610222455559" style="zoom: 67%;" />
+![](https://i.imgur.com/NZYiCoP.png)
 
-DCGAN - Generator: 主要用Pytorch作為框架，並按照倫文內的模型十件，經過上面的fuction後，都有做出noise是random的，然後用fractional-strided convolution來取代2D convolutional layer。![img](https://lh4.googleusercontent.com/75pEIMPyamiS_FsOy-qbf0JatgjwEwFyAKuUfGf_GIWEupU8HVypmBxOnnWNrAm_FhPAqvNzFqPdbCTnbxH74S5-iEtaj6k_0wKY38kX1lPvs0KgG_tvqAcB2V3yV24sVQNPWcCVA38__SN42g)DCGAN - Discriminator: 在DCGAN論文的Discriminator中，提取feature是由一連串的2D Convolutional layer, Batchnorm 跟 LeakyReLU負責的。最後輸出一個單一值，用來代表Discriminator認為是真或假的圖片。那在這邊我們上網查到一種做法，是在最後一層卷基層加上全連結層，而這層會被Generator用來try以及match。以下是我們的discriminator的內部結構，主要是以論文的為主，但input shape會改成3 (channel ) * 64 (image height) * 64 (img_weight)，也可以看到剛剛所說的結合CNN，用stride取代pooling，最後加上sigmoid activation function來回傳0(代表假的圖片)或1(代表真)。![img](https://lh4.googleusercontent.com/7-2oLMyPdtKEg6E4BG5DURUcng14FftWbGUtwN2PfPzPuoL3YIK55EuYuQqpTpWlcThrexcxsT3gdEQD5tgdydOG7OgY6KV8UjoOTp8h7YBhToMOOb9HxP2dfTHH5i9ERfnpBlHYZXszG2O5KQ)最後就是training，主要就是將Generator產出的結果丟進Discriminator，並重複循環到Discriminator以為產出的Artwork是真的Artwork為止。
 
-<img src="C:\Users\user\Downloads\下載 (5).png" alt="下載 (5)" style="zoom: 67%;" />
+DCGAN - Generator: 主要用Pytorch作為框架，並按照倫文內的模型十件，經過上面的fuction後，都有做出noise是random的，然後用fractional-strided convolution來取代2D convolutional layer。![img](https://lh4.googleusercontent.com/75pEIMPyamiS_FsOy-qbf0JatgjwEwFyAKuUfGf_GIWEupU8HVypmBxOnnWNrAm_FhPAqvNzFqPdbCTnbxH74S5-iEtaj6k_0wKY38kX1lPvs0KgG_tvqAcB2V3yV24sVQNPWcCVA38__SN42g)DCGAN - Discriminator: 在DCGAN論文的Discriminator中，提取feature是由一連串的2D Convolutional layer, Batchnorm 跟 LeakyReLU負責的。最後輸出一個單一值，用來代表Discriminator認為是真或假的圖片。那在這邊我們上網查到一種做法，是在最後一層卷基層加上全連結層，而這層會被Generator用來try以及match。以下是我們的discriminator的內部結構，主要是以論文的為主，但input shape會改成3 (channel ) * 64 (image height) * 64 (img_weight)，也可以看到剛剛所說的結合CNN，用stride取代pooling，最後加上sigmoid activation function來回傳0(代表假的圖片)或1(代表真)。![img](https://lh4.googleusercontent.com/7-2oLMyPdtKEg6E4BG5DURUcng14FftWbGUtwN2PfPzPuoL3YIK55EuYuQqpTpWlcThrexcxsT3gdEQD5tgdydOG7OgY6KV8UjoOTp8h7YBhToMOOb9HxP2dfTHH5i9ERfnpBlHYZXszG2O5KQ)
+最後就是training，主要就是將Generator產出的結果丟進Discriminator，並重複循環到Discriminator以為產出的Artwork是真的Artwork為止。
+
+![](https://i.imgur.com/rDpMHpY.png)
+
 
 #### Implementation - Style Transfer:
 
