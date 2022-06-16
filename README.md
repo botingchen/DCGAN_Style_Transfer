@@ -89,8 +89,6 @@ DCGAN - Generator: 主要用Pytorch作為框架，並按照倫文內的模型十
 
 ---
 
-Github Link:https://github.com/botingchen/DCGAN_Style_Transfer 
-
 References:https://www.tensorflow.org/tutorials/generative/style_transferhttps://www.tensorflow.org/tutorials/generative/dcgan?fbclid=IwAR36fgQkpG_YPbZ_EhIYmGF92xFqev1xEkw1V-aUfMguGdBw9graH-q8FjQ
 
 Presentation Video:https://drive.google.com/file/d/1700zEtckykeZzNt_zk_kqVd9ZMlcjvNN/view?usp=sharing
